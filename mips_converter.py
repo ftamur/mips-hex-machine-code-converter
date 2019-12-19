@@ -47,7 +47,10 @@ def binToHex(_bin: str) -> 'String':
 
 def r_type(inst: str) -> '32 - Bit Word':
     
-    """takes -> 'add $5, $3, $4'"""
+    """ 'add $5, $3, $4'\n
+        'mult $5, $3'\n
+        'mflo $5'\n
+        'mfhi $5'"""
     
     parts = inst.split()
     
@@ -69,12 +72,7 @@ def r_type(inst: str) -> '32 - Bit Word':
         
         total += rs_bin + rt_bin
         full_bin = opcode + rs_bin + rt_bin + rd_bin + (32 - len(total)) * '0'
-
-        print(inst)
-        print("r_type: " + "not mult: " + operation + rd + rs + rt, sep=' ')
-        print("hex: " + full_bin)
-        print()
-        
+    
     elif operation == 'mult':
     
         rt = parts[2].strip(',$')
@@ -84,27 +82,16 @@ def r_type(inst: str) -> '32 - Bit Word':
         total += rt_bin
         full_bin = opcode + rd_bin + rt_bin + (32 - len(total)) * '0'
 
-        print(inst)
-        print("r_type: " + "mult type: " + operation + rd + rt, sep=' ')
-        print("hex: " + full_bin)
-        print()
-    
     else:
         total = opcode + 10 * '0' + rd_bin
         full_bin = opcode + 10 * '0' + rd_bin + (32 - len(total)) * '0'
 
-        print(inst)
-        print("r_type: " + "mf type: " + operation + rd, sep='-')
-        print("hex: " + full_bin)
-        print()
-    
-    
     return binToHex(full_bin)
 
 
 def j_type(inst: str) -> '32 - Bit Word':
     
-    """'j <int> address'"""
+    """'j <int:label>'"""
     
     parts = inst.split()
     
@@ -116,17 +103,12 @@ def j_type(inst: str) -> '32 - Bit Word':
  
     full_bin = opcode + address_bin
 
-    print(inst)
-    print("j_type: " + operation + address, sep=' ')
-    print("hex: " + full_bin)
-    print()
-    
     return binToHex(full_bin)
 
 
 def i_type_mem(inst: str) -> '32 - Bit Word':
     
-    """i_type for lw and sw -> 'lw/sw rd/rs, i(rs/rd)'"""
+    """i_type for lw and sw -> 'lw-sw rd-rs, i(rs-rd)'"""
     
     parts = inst.split()
     
@@ -141,12 +123,7 @@ def i_type_mem(inst: str) -> '32 - Bit Word':
     offset_bin = decToBin(int(offset), 16)
     
     full_bin = opcode + reg_add_2_bin + reg_add_1_bin + offset_bin
-
-    print(inst)
-    print("i_type_mem: " + operation + reg_add_1 + reg_add_2, sep=' ')
-    print("hex: " + full_bin)
-    print()
-    
+ 
     return binToHex(full_bin)
 
 
@@ -174,12 +151,7 @@ def i_type_branch(inst: str) -> '32 - Bit Word':
         address_bin = decToBin(int(address), 16)
          
         full_bin += rt_bin + rs_bin + address_bin
-
-        print(inst)
-        print("i_type_branch: not blez: " + operation + rs + rt, sep=' ')
-        print("hex: " + full_bin)
-        print()
-            
+    
     elif operation == 'blez':
         
         rs = parts[1].strip('$,')
@@ -190,11 +162,6 @@ def i_type_branch(inst: str) -> '32 - Bit Word':
         
         full_bin += rs_bin + address_bin
 
-        print(inst)
-        print("i_type_branch: blez: " + operation + rs + address, sep=' ')
-        print("hex: " + full_bin)
-        print()
-     
     return binToHex(full_bin)
 
 
@@ -217,7 +184,7 @@ def convert(inst: str) -> '32 - Bit Word':
             return "Unknown"
 
     except:
-
+        
         return "Something went wrong!"
 
 

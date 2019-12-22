@@ -41,13 +41,11 @@ def detect_labels_and_remove(inst_list: list) -> 'List':
         if inst[-1] != ':':
             new_inst_list.append(change_label_to_int(inst, labels))
             
-    print(labels)
     return new_inst_list
 
 
 def inst_to_out_txt(inst_list: list, file_name: str) -> 'Instruction Hex Txt':
     
-    print(inst_list)
     with open(file_name, 'w') as file:
         file.write('v2.0 raw' + '\n')
         for inst in inst_list:
